@@ -1,0 +1,170 @@
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+.form {
+  @apply bg-white shadow-md rounded p-8;
+  
+  & .form-header {
+    @apply flex items-center;
+  }
+
+  & .form-body {
+    @apply mt-12;
+
+    > * {
+      @apply mt-4;
+    }
+  }
+}
+
+.form-element {
+  @apply border p-4;
+
+  &.element-page {
+    @apply bg-orange-100 border-orange-200;
+
+    & .title-input {
+      @apply text-2xl text-orange-700;
+
+      &:focus {
+        @apply bg-orange-200;
+      }
+    }
+  }
+
+  &.element-section {
+    @apply bg-green-100 border-green-200;
+
+    & .title-input {
+      @apply text-xl text-green-700;
+
+      &:focus {
+        @apply bg-green-200;
+      }
+    }
+  }
+
+  &.element-question {
+    @apply bg-indigo-100 border-indigo-200;
+  }
+
+  & .title-input {
+    @apply appearance-none bg-transparent border-none w-full mr-3 py-3 px-4 leading-tight;
+
+    transition: background-color 0.25s ease;
+    -webkit-transition: background-color 0.25s ease;
+
+    &:focus {
+      @apply outline-none;
+    }
+  }
+
+  & .form-element-body {
+    > * {
+      @apply mt-4;
+    }
+  }
+
+  & .form-element-actions {
+    @apply mt-8 -mx-2;
+  }
+
+  & .question-fields {
+    @apply flex flex-wrap -mx-3;
+
+    > :first-child {
+      @apply flex-1;
+    }
+
+    > * {
+      @apply px-3;
+    }
+
+    & .question-title-input {
+      @apply appearance-none block w-full bg-white text-gray-800 py-3 px-4 leading-tight;
+
+      &:focus {
+        @apply outline-none;
+      }
+    }
+
+    & .question-type-select {
+      @apply relative;
+
+      & select {
+        @apply block appearance-none w-full bg-white text-gray-800 py-3 px-4 pr-8 leading-tight;
+
+        &:focus {
+          @apply outline-none;
+        }
+
+        &:hover {
+          @apply cursor-pointer;
+        }
+      }
+
+      & div {
+        @apply pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-800;
+
+        > svg {
+          @apply fill-current h-4 w-4;
+        }
+      }
+    }
+  }
+}
+
+.button {
+  @apply text-white font-bold py-2 px-4 mx-2 rounded;
+
+  &.blue {
+    @apply bg-blue-500;
+    
+    &:hover {
+      @apply bg-blue-700 cursor-pointer;
+    }
+  }
+
+  &.orange {
+    @apply bg-orange-500;
+    
+    &:hover {
+      @apply bg-orange-700 cursor-pointer;
+    }
+  }
+
+  &.purple {
+    @apply bg-purple-500;
+    
+    &:hover {
+      @apply bg-purple-700 cursor-pointer;
+    }
+  }
+
+  &.green {
+    @apply bg-green-500;
+    
+    &:hover {
+      @apply bg-green-700 cursor-pointer;
+    }
+  }
+
+  &.indigo {
+    @apply bg-indigo-500;
+    
+    &:hover {
+      @apply bg-indigo-700 cursor-pointer;
+    }
+  }
+
+  &.delete {
+    @apply bg-transparent border border-red-500 text-red-500;
+    
+    &:hover {
+      @apply border-red-700 text-red-700 cursor-pointer;
+    }
+  }
+}
