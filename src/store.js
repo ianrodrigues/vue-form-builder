@@ -1,8 +1,10 @@
+import _ from 'lodash';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { normalize } from 'normalizr';
 
 import { CreateNewForm, FormSchema } from '@/models/Form';
+import { CreateNewPage, PageSchema } from '@/models/Page';
 
 Vue.use(Vuex);
 
@@ -24,7 +26,7 @@ export default new Vuex.Store({
 
     formPages({ formBuilder }) {
       try {
-        return formBuilder.entities.pages;
+        return Object.values(formBuilder.entities.pages);
       } catch (error) {
         return [];
       }
@@ -38,7 +40,33 @@ export default new Vuex.Store({
 
     deleteForm(state) {
       state.formBuilder = {};
-    }
+    },
+
+    addPage({ formBuilder }, { formId, page }) {
+      Vue.set(formBuilder.entities, 'pages', {
+        ...formBuilder.entities.pages,
+        [page.uuid]: {
+          ...page,
+        },
+      });
+
+      Vue.set(formBuilder.entities.forms[formId], 'items', [
+        ...formBuilder.entities.forms[formId].items,
+        page.uuid,
+      ]);
+    },
+
+    setPageTitle({ formBuilder: { entities } }, { pageId, title }) {
+      Vue.set(entities.pages[pageId], 'title', title);
+    },
+
+    deletePage({ formBuilder: { entities } }, { formId, pageId }) {
+      entities.pages = _.reject(entities.pages, page => {
+        return page.uuid === pageId;
+      });
+
+      _.remove(entities.forms[formId].items, item => item === pageId);
+    },
   },
 
   actions: {
@@ -48,6 +76,20 @@ export default new Vuex.Store({
 
     deleteForm({ commit }) {
       commit('deleteForm');
-    }
+    },
+
+    addPage({ commit }, formId) {
+      const { entities: { pages }, result } = normalize(CreateNewPage(), PageSchema);
+      
+      commit('addPage', { formId, page: pages[result] });
+    },
+
+    updatePageTitle({ commit }, payload) {
+      commit('setPageTitle', payload);
+    },
+
+    deletePage({ commit }, payload) {
+      commit('deletePage', payload);
+    },
   },
 });

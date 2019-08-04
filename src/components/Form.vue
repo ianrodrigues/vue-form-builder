@@ -20,7 +20,7 @@
         </div>
 
         <div class="flex -mx-2" v-else>
-          <button class="button orange">
+          <button class="button orange" @click="addPage(formId)">
             Add Page
           </button>
 
@@ -51,7 +51,7 @@ export default {
 
   components: { ZypPage },
 
-  methods: mapActions(['createNewForm', 'deleteForm']),
+  methods: mapActions(['createNewForm', 'deleteForm', 'addPage']),
 
   computed: {
     ...mapGetters(['formId', 'formPages']),
