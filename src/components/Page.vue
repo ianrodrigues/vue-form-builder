@@ -6,22 +6,22 @@
 
     <div class="form-element-body">
       <component
-        v-for="element in pageSections(page.items)"
+        v-for="element in pageItems(page.uuid)"
         v-bind:key="element.uuid"
         v-bind:is="element.type === 'section' ? 'ZypSection' : 'ZypQuestion'"
         v-bind:item="element" />
     </div>
 
     <div class="form-element-actions">
-      <button class="button green" @click="addSection(page.uuid)">
+      <button class="button green" @click="addPageSection(page.uuid)">
         Add Section
       </button>
 
-      <button class="button indigo">
+      <button class="button indigo" @click="addPageQuestion(page.uuid)">
         Add Question
       </button>
 
-      <button class="button delete" @click="deletePage({ formId, pageId: page.uuid })">
+      <button class="button delete" @click="deletePage(page.uuid)">
         Delete Page
       </button>
     </div>
@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 import ZypQuestion from '@/components/Question.vue';
 import ZypSection from '@/components/Section.vue';
@@ -42,11 +42,11 @@ export default {
   props: ['page'],
 
   methods: {
-    ...mapActions(['updatePageTitle', 'deletePage', 'addSection']),
+    ...mapActions(['updatePageTitle', 'deletePage', 'addPageSection', 'addPageQuestion']),
   },
 
   computed: {
-    ...mapGetters(['formId', 'pageSections']),
+    ...mapGetters(['pageItems']),
 
     pageTitle: {
       get() {
@@ -56,10 +56,10 @@ export default {
       set(value) {
         this.updatePageTitle({
           pageId: this.page.uuid,
-          title: value
+          title: value,
         });
       },
-    }
+    },
   },
 };
 </script>

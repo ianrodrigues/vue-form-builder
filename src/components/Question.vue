@@ -11,7 +11,7 @@
 
       <div>
         <div class="question-type-select">
-          <select v-model="item.response_type">
+          <select v-model="item.responseType">
             <option value="text">Text</option>
             <option value="number">Number</option>
           </select>

@@ -1,11 +1,12 @@
-import _ from 'lodash';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { normalize } from 'normalizr';
 
-import { CreateNewForm, FormSchema } from '@/models/Form';
-import { CreateNewPage, PageSchema } from '@/models/Page';
-import { CreateNewSection, SectionSchema } from '@/models/Section';
+import { PageSchema, SectionSchema, QuestionSchema } from '@/store/schema';
+import { CreateNewForm } from '@/models/Form';
+import { CreateNewPage } from '@/models/Page';
+import { CreateNewSection } from '@/models/Section';
+import { CreateNewQuestion } from '@/models/Question';
 
 Vue.use(Vuex);
 
@@ -13,116 +14,148 @@ export default new Vuex.Store({
   strict: true,
 
   state: {
-    formBuilder: {},
+    form: {
+      uuid: null,
+      pages: [],
+    },
+
+    formItems: {
+      pages: {},
+      sections: {},
+      questions: {},
+    },
   },
 
   getters: {
-    formId({ formBuilder }) {
-      const formId = formBuilder.result;
-      if (formId === undefined) {
-        return null;
-      }
-      return formId;
-    },
-
-    formPages({ formBuilder }) {
+    formPages({ formItems: { pages } }) {
       try {
-        return Object.values(formBuilder.entities.pages);
+        return Object.values(pages);
       } catch (error) {
         return [];
       }
     },
 
-    pageSections({ formBuilder: { entities } }, pageSectionIds) {
-      return (pageSectionIds) => {
+    // eslint-disable-next-line
+    pageItems({ formItems }, pageId) {
+      // eslint-disable-next-line
+      return (pageId) => {
         try {
-          return _.filter(entities.sections, section => pageSectionIds.includes(section.uuid));
+          return formItems.pages[pageId].items.map(({ id, schema }) => formItems[schema][id]);
         } catch (error) {
           return [];
         }
-      }
-    }
+      };
+    },
   },
 
   mutations: {
-    createNewForm(state, form) {
-      state.formBuilder = form;
+    setForm(state, form) {
+      state.form = form;
+    },
+
+    setFormItems(state, formItems) {
+      state.form = formItems;
     },
 
     deleteForm(state) {
       state.formBuilder = {};
     },
 
-    addPage({ formBuilder }, { formId, page }) {
-      Vue.set(formBuilder.entities, 'pages', {
-        ...formBuilder.entities.pages,
-        [page.uuid]: {
-          ...page,
+    addPage({ form, formItems }, page) {
+      form.pages.push(page.uuid);
+      Vue.set(formItems.pages, page.uuid, page);
+    },
+
+    setPageTitle({ formItems: { pages } }, { pageId, title }) {
+      Vue.set(pages[pageId], 'title', title);
+    },
+
+    deletePage({ form, formItems }, pageId) {
+      form.pages.splice(pageId, 1);
+
+      formItems.pages[pageId].items.forEach(({ id, schema }) => Vue.delete(formItems[schema], id));
+
+      Vue.delete(formItems.pages, pageId);
+    },
+
+    addSection({ formItems }, { parentSchema, parentId, section }) {
+      const items = [
+        ...formItems[parentSchema][parentId].items,
+        {
+          id: section.uuid,
+          schema: 'sections',
         },
-      });
+      ];
 
-      Vue.set(formBuilder.entities.forms[formId], 'items', [
-        ...formBuilder.entities.forms[formId].items,
-        page.uuid,
-      ]);
+      Vue.set(formItems[parentSchema][parentId], 'items', items);
+      Vue.set(formItems.sections, section.uuid, section);
     },
 
-    setPageTitle({ formBuilder: { entities } }, { pageId, title }) {
-      Vue.set(entities.pages[pageId], 'title', title);
-    },
-
-    deletePage({ formBuilder: { entities } }, { formId, pageId }) {
-      const page = _.find(entities.pages, page => page.uuid === pageId);
-      
-      page.items.forEach(sectionId => Vue.delete(entities.sections, sectionId));
-
-      Vue.delete(entities.pages, pageId);
-
-      _.remove(entities.forms[formId].items, item => item === pageId);
-    },
-
-    addSection({ formBuilder }, { parentId, section }) {
-      Vue.set(formBuilder.entities, 'sections', {
-        ...formBuilder.entities.sections,
-        [section.uuid]: {
-          ...section,
+    addQuestion({ formItems }, { parentSchema, parentId, question }) {
+      const items = [
+        ...formItems[parentSchema][parentId].items,
+        {
+          id: question.uuid,
+          schema: 'questions',
         },
-      });
+      ];
 
-      Vue.set(formBuilder.entities.pages[parentId], 'items', [
-        ...formBuilder.entities.pages[parentId].items,
-        section.uuid,
-      ]);
-    }
+      Vue.set(formItems[parentSchema][parentId], 'items', items);
+      Vue.set(formItems.questions, question.uuid, question);
+    },
   },
 
   actions: {
     createNewForm({ commit }) {
-      commit('createNewForm', normalize(CreateNewForm(), FormSchema));
+      const { uuid } = CreateNewForm();
+
+      const form = {
+        uuid,
+        pages: [],
+      };
+
+      commit('setForm', form);
     },
 
     deleteForm({ commit }) {
-      commit('deleteForm');
+      const form = {
+        uuid: null,
+        pages: [],
+      };
+
+      const formItems = {
+        pages: {},
+        sections: {},
+        questions: {},
+      };
+
+      commit('setForm', form);
+      commit('setFormItems', formItems);
     },
 
-    addPage({ commit }, formId) {
+    addPage({ commit }) {
       const { entities: { pages }, result } = normalize(CreateNewPage(), PageSchema);
-      
-      commit('addPage', { formId, page: pages[result] });
+      commit('addPage', pages[result]);
     },
 
     updatePageTitle({ commit }, payload) {
       commit('setPageTitle', payload);
     },
 
-    deletePage({ commit }, payload) {
-      commit('deletePage', payload);
+    deletePage({ commit }, pageId) {
+      commit('deletePage', pageId);
     },
 
-    addSection({ commit }, parentId) {
+    addPageSection({ commit }, pageId) {
       const { entities: { sections }, result } = normalize(CreateNewSection(), SectionSchema);
-      
-      commit('addSection', { parentId, section: sections[result] });
-    }
+
+      commit('addSection', { parentSchema: 'pages', parentId: pageId, section: sections[result] });
+    },
+
+    addPageQuestion({ commit }, pageId) {
+      const { entities: { questions }, result } = normalize(CreateNewQuestion(), QuestionSchema);
+
+      commit('addQuestion', { parentSchema: 'pages', parentId: pageId, question: questions[result] });
+    },
   },
 });

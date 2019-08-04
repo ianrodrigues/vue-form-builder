@@ -6,7 +6,7 @@
       </div>
 
       <div>
-        <div class="flex -mx-2" v-if="formId === null">
+        <div class="flex -mx-2" v-if="form.uuid === null">
           <button id="create-new-form-button" class="button blue" @click="createNewForm">
             Create Form
           </button>
@@ -20,7 +20,7 @@
         </div>
 
         <div class="flex -mx-2" v-else>
-          <button class="button orange" @click="addPage(formId)">
+          <button class="button orange" @click="addPage">
             Add Page
           </button>
 
@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 
 import ZypPage from '@/components/Page.vue';
 
@@ -54,7 +54,11 @@ export default {
   methods: mapActions(['createNewForm', 'deleteForm', 'addPage']),
 
   computed: {
-    ...mapGetters(['formId', 'formPages']),
+    ...mapState({
+      form: ({ form }) => form,
+    }),
+
+    ...mapGetters(['formPages']),
   },
 };
 </script>

@@ -1,16 +1,11 @@
 import uuid from 'uuid/v4';
-import { schema } from 'normalizr';
-
-export const CreateNewForm = () => {
-  return new Form(uuid());
-};
-
-export const FormSchema = new schema.Entity('forms', {}, { idAttribute: 'uuid' });
 
 export default class Form {
-  constructor(uuid) {
+  constructor(id) {
     this.type = 'form';
-    this.uuid = uuid;
+    this.uuid = id;
     this.items = [];
   }
 }
+
+export const CreateNewForm = () => new Form(uuid());
