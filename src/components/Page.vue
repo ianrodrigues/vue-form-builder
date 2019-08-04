@@ -6,14 +6,14 @@
 
     <div class="form-element-body">
       <component
-        v-for="element in page.items"
+        v-for="element in pageSections(page.items)"
         v-bind:key="element.uuid"
         v-bind:is="element.type === 'section' ? 'ZypSection' : 'ZypQuestion'"
         v-bind:item="element" />
     </div>
 
     <div class="form-element-actions">
-      <button class="button green">
+      <button class="button green" @click="addSection(page.uuid)">
         Add Section
       </button>
 
@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 
 import ZypQuestion from '@/components/Question.vue';
 import ZypSection from '@/components/Section.vue';
@@ -42,11 +42,11 @@ export default {
   props: ['page'],
 
   methods: {
-    ...mapActions(['updatePageTitle', 'deletePage']),
+    ...mapActions(['updatePageTitle', 'deletePage', 'addSection']),
   },
-  
+
   computed: {
-    ...mapGetters(['formId']),
+    ...mapGetters(['formId', 'pageSections']),
 
     pageTitle: {
       get() {

@@ -5,6 +5,7 @@ import { normalize } from 'normalizr';
 
 import { CreateNewForm, FormSchema } from '@/models/Form';
 import { CreateNewPage, PageSchema } from '@/models/Page';
+import { CreateNewSection, SectionSchema } from '@/models/Section';
 
 Vue.use(Vuex);
 
@@ -29,6 +30,16 @@ export default new Vuex.Store({
         return Object.values(formBuilder.entities.pages);
       } catch (error) {
         return [];
+      }
+    },
+
+    pageSections({ formBuilder: { entities } }, pageSectionIds) {
+      return (pageSectionIds) => {
+        try {
+          return _.filter(entities.sections, section => pageSectionIds.includes(section.uuid));
+        } catch (error) {
+          return [];
+        }
       }
     }
   },
@@ -61,12 +72,28 @@ export default new Vuex.Store({
     },
 
     deletePage({ formBuilder: { entities } }, { formId, pageId }) {
-      entities.pages = _.reject(entities.pages, page => {
-        return page.uuid === pageId;
-      });
+      const page = _.find(entities.pages, page => page.uuid === pageId);
+      
+      page.items.forEach(sectionId => Vue.delete(entities.sections, sectionId));
+
+      Vue.delete(entities.pages, pageId);
 
       _.remove(entities.forms[formId].items, item => item === pageId);
     },
+
+    addSection({ formBuilder }, { parentId, section }) {
+      Vue.set(formBuilder.entities, 'sections', {
+        ...formBuilder.entities.sections,
+        [section.uuid]: {
+          ...section,
+        },
+      });
+
+      Vue.set(formBuilder.entities.pages[parentId], 'items', [
+        ...formBuilder.entities.pages[parentId].items,
+        section.uuid,
+      ]);
+    }
   },
 
   actions: {
@@ -91,5 +118,11 @@ export default new Vuex.Store({
     deletePage({ commit }, payload) {
       commit('deletePage', payload);
     },
+
+    addSection({ commit }, parentId) {
+      const { entities: { sections }, result } = normalize(CreateNewSection(), SectionSchema);
+      
+      commit('addSection', { parentId, section: sections[result] });
+    }
   },
 });
