@@ -54,11 +54,7 @@ export default new Vuex.Store({
     },
 
     setFormItems(state, formItems) {
-      state.form = formItems;
-    },
-
-    deleteForm(state) {
-      state.formBuilder = {};
+      state.formItems = formItems;
     },
 
     addPage({ form, formItems }, page) {
