@@ -1,19 +1,19 @@
 <template>
   <div class="form-element element-section">
     <div>
-      <input class="title-input" type="text" placeholder="Section Title" v-model="item.title" />
+      <input class="title-input" type="text" placeholder="Section Title" v-model="sectionTitle" />
     </div>
 
     <div class="form-element-body">
       <component
-        v-for="child in item.items"
+        v-for="child in sectionItems(item.uuid)"
         v-bind:is="child.type === 'section' ? 'ZypSection' : 'ZypQuestion'"
         v-bind:key="child.uuid"
         v-bind:item="child" />
     </div>
 
     <div class="form-element-actions">
-      <button class="button green">
+      <button class="button green" @click="addSubSection(item.uuid)">
         Add Sub-Section
       </button>
 
@@ -21,7 +21,7 @@
         Add Question
       </button>
 
-      <button class="button delete">
+      <button class="button delete" @click="deleteSection(item.uuid)">
         Delete Section
       </button>
     </div>
@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+
 import ZypQuestion from '@/components/Question.vue';
 
 export default {
@@ -37,5 +39,26 @@ export default {
   components: { ZypQuestion },
 
   props: ['item'],
+
+  methods: {
+    ...mapActions(['addSubSection', 'updateSectionTitle', 'deleteSection']),
+  },
+
+  computed: {
+    ...mapGetters(['sectionItems']),
+
+    sectionTitle: {
+      get() {
+        return this.item.title;
+      },
+
+      set(value) {
+        this.updateSectionTitle({
+          sectionId: this.item.uuid,
+          title: value,
+        });
+      },
+    }
+  },
 };
 </script>

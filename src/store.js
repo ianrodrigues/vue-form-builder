@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { normalize } from 'normalizr';
@@ -46,6 +47,18 @@ export default new Vuex.Store({
         }
       };
     },
+
+    // eslint-disable-next-line
+    sectionItems({ formItems }, sectionId) {
+      // eslint-disable-next-line
+      return (sectionId) => {
+        try {
+          return formItems.sections[sectionId].items.map(({ id, schema }) => formItems[schema][id]);
+        } catch (error) {
+          return [];
+        }
+      };
+    },
   },
 
   mutations: {
@@ -66,12 +79,24 @@ export default new Vuex.Store({
       Vue.set(pages[pageId], 'title', title);
     },
 
+    setSectionTitle({ formItems: { sections } }, { sectionId, title }) {
+      Vue.set(sections[sectionId], 'title', title);
+    },
+
     deletePage({ form, formItems }, pageId) {
-      form.pages.splice(pageId, 1);
-
-      formItems.pages[pageId].items.forEach(({ id, schema }) => Vue.delete(formItems[schema], id));
-
       Vue.delete(formItems.pages, pageId);
+    },
+
+    deleteSection({ formItems }, sectionId) {
+      _.forEach(formItems.pages, page => {
+        _.remove(page.items, { id: sectionId, schema: 'sections' });
+      });
+
+      _.forEach(formItems.sections, section => {
+        _.remove(section.items, { id: sectionId, schema: 'sections' });
+      });
+
+      Vue.delete(formItems.sections, sectionId);
     },
 
     addSection({ formItems }, { parentSchema, parentId, section }) {
@@ -138,7 +163,11 @@ export default new Vuex.Store({
       commit('setPageTitle', payload);
     },
 
-    deletePage({ commit }, pageId) {
+    deletePage({ commit, dispatch, state }, pageId) {
+      state.formItems.pages[pageId].items.forEach(item => {
+        dispatch('deleteSection', item.id);
+      });
+
       commit('deletePage', pageId);
     },
 
@@ -152,6 +181,25 @@ export default new Vuex.Store({
       const { entities: { questions }, result } = normalize(CreateNewQuestion(), QuestionSchema);
 
       commit('addQuestion', { parentSchema: 'pages', parentId: pageId, question: questions[result] });
+    },
+
+    addSubSection({ commit }, sectionId) {
+      const { entities: { sections }, result } = normalize(CreateNewSection(), SectionSchema);
+
+      commit('addSection', { parentSchema: 'sections', parentId: sectionId, section: sections[result] });
+    },
+
+    updateSectionTitle({ commit }, payload) {
+      commit('setSectionTitle', payload);
+    },
+
+    deleteSection({ commit, dispatch, state }, sectionId) {
+      state.formItems.sections[sectionId].items.forEach(item => {
+        dispatch('deleteSection', item.id);
+      });
+
+      // console.log('remove section: ', sectionId);
+      commit('deleteSection', sectionId);
     },
   },
 });
