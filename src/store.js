@@ -84,6 +84,7 @@ export default new Vuex.Store({
     },
 
     deletePage({ form, formItems }, pageId) {
+      form.pages.splice(pageId, 1);
       Vue.delete(formItems.pages, pageId);
     },
 
@@ -97,6 +98,18 @@ export default new Vuex.Store({
       });
 
       Vue.delete(formItems.sections, sectionId);
+    },
+
+    deleteQuestion({ form, formItems }, questionId) {
+      _.forEach(formItems.pages, page => {
+        _.remove(page.items, { id: questionId, schema: 'questions' });
+      });
+
+      _.forEach(formItems.sections, section => {
+        _.remove(section.items, { id: questionId, schema: 'questions' });
+      });
+
+      Vue.delete(formItems.questions, questionId);
     },
 
     addSection({ formItems }, { parentSchema, parentId, section }) {
@@ -164,10 +177,11 @@ export default new Vuex.Store({
     },
 
     deletePage({ commit, dispatch, state }, pageId) {
-      state.formItems.pages[pageId].items.forEach(item => {
-        dispatch('deleteSection', item.id);
+      _.forEachRight(state.formItems.pages[pageId].items, item => {
+        let action = (item.schema === 'sections') ? 'deleteSection' : 'deleteQuestion';
+        dispatch(action, item.id);
       });
-
+      
       commit('deletePage', pageId);
     },
 
@@ -194,17 +208,22 @@ export default new Vuex.Store({
     },
 
     deleteSection({ commit, dispatch, state }, sectionId) {
-      state.formItems.sections[sectionId].items.forEach(item => {
-        dispatch('deleteSection', item.id);
+      _.forEachRight(state.formItems.sections[sectionId].items, item => {
+        let action = (item.schema === 'sections') ? 'deleteSection' : 'deleteQuestion';
+        dispatch(action, item.id);
       });
 
       commit('deleteSection', sectionId);
     },
-
+    
     addSectionQuestion({ commit }, sectionId) {
       const { entities: { questions }, result } = normalize(CreateNewQuestion(), QuestionSchema);
-
+      
       commit('addQuestion', { parentSchema: 'sections', parentId: sectionId, question: questions[result] });
+    },
+    
+    deleteQuestion({ commit }, questionId) {
+      commit('deleteQuestion', questionId);
     },
   },
 });

@@ -22,7 +22,7 @@
         </div>
       </div>
 
-      <button class="button delete">
+      <button class="button delete" @click="deleteQuestion(item.uuid)">
         Delete Question
       </button>
     </div>
@@ -30,9 +30,15 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'ZypQuestion',
 
   props: ['item'],
+
+  methods: {
+    ...mapActions(['deleteQuestion']),
+  },
 };
 </script>
