@@ -198,8 +198,13 @@ export default new Vuex.Store({
         dispatch('deleteSection', item.id);
       });
 
-      // console.log('remove section: ', sectionId);
       commit('deleteSection', sectionId);
+    },
+
+    addSectionQuestion({ commit }, sectionId) {
+      const { entities: { questions }, result } = normalize(CreateNewQuestion(), QuestionSchema);
+
+      commit('addQuestion', { parentSchema: 'sections', parentId: sectionId, question: questions[result] });
     },
   },
 });
