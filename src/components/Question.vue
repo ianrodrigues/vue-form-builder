@@ -6,12 +6,12 @@
           class="question-title-input"
           type="text"
           placeholder="What's your favorite superhero?"
-          v-model="item.title">
+          v-model="questionTitle">
       </div>
 
       <div>
         <div class="question-type-select">
-          <select v-model="item.responseType">
+          <select v-model="questionResponseType">
             <option value="text">Text</option>
             <option value="number">Number</option>
           </select>
@@ -38,7 +38,35 @@ export default {
   props: ['item'],
 
   methods: {
-    ...mapActions(['deleteQuestion']),
+    ...mapActions(['deleteQuestion', 'updateQuestionTitle', 'updateQuestionResponseType']),
+  },
+
+  computed: {
+    questionTitle: {
+      get() {
+        return this.item.title;
+      },
+
+      set(value) {
+        this.updateQuestionTitle({
+          questionId: this.item.uuid,
+          title: value,
+        });
+      }
+    },
+
+    questionResponseType: {
+      get() {
+        return this.item.responseType;
+      },
+
+      set(value) {
+        this.updateQuestionResponseType({
+          questionId: this.item.uuid,
+          responseType: value,
+        });
+      }
+    }
   },
 };
 </script>

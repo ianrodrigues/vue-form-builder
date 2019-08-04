@@ -83,6 +83,14 @@ export default new Vuex.Store({
       Vue.set(sections[sectionId], 'title', title);
     },
 
+    setQuestionTitle({ formItems: { questions } }, { questionId, title }) {
+      Vue.set(questions[questionId], 'title', title);
+    },
+
+    setQuestionResponseType({ formItems: { questions } }, { questionId, responseType }) {
+      Vue.set(questions[questionId], 'responseType', responseType);
+    },
+
     deletePage({ form, formItems }, pageId) {
       form.pages.splice(pageId, 1);
       Vue.delete(formItems.pages, pageId);
@@ -224,6 +232,14 @@ export default new Vuex.Store({
     
     deleteQuestion({ commit }, questionId) {
       commit('deleteQuestion', questionId);
+    },
+    
+    updateQuestionTitle({ commit }, payload) {
+      commit('setQuestionTitle', payload);
+    },
+
+    updateQuestionResponseType({ commit }, payload) {
+      commit('setQuestionResponseType', payload);
     },
   },
 });
