@@ -14,7 +14,7 @@
           <div class="flex">
             <label class="button blue">
               <span>Import Form</span>
-              <input class="hidden" type="file">
+              <input class="hidden" type="file" @change="importForm">
             </label>
           </div>
         </div>
@@ -36,6 +36,11 @@
     </div>
 
     <div class="form-body">
+      <div class="alert" role="alert" v-if="importFails">
+        <p class="alert-header">Whoops!</p>
+        <p>It looks like you're trying to import an invalid file.</p>
+      </div>
+
       <ZypPage v-for="page in formPages" v-bind:key="page.uuid" v-bind:page="page" />
     </div>
   </div>
@@ -45,7 +50,7 @@
 import { mapActions, mapGetters, mapState } from 'vuex';
 
 import ZypPage from '@/components/Page.vue';
-import { CreateFormJsonBlob, SaveFile } from '@/services';
+import { CreateFormJsonBlob, SaveFile, ReadFormJsonFile, CreateNormalizedFormFromObject } from '@/services';
 
 export default {
   name: 'ZypForm',
@@ -57,8 +62,21 @@ export default {
 
     exportForm() {
       const blob = CreateFormJsonBlob(this.form, this.formItems);
-
       SaveFile(`zypone-${this.form.uuid}.json`, blob, 'text/json');
+    },
+
+    importForm(event) {
+      this.importFails = false;
+
+      ReadFormJsonFile(event.target.files[0], (data) => {
+        try {
+          const { result, entities } = CreateNormalizedFormFromObject(JSON.parse(data));
+          this.$store.commit('setForm', result);
+          this.$store.commit('setFormItems', entities);
+        } catch (error) {
+          this.importFails = true;
+        }
+      });
     },
   },
 
@@ -70,5 +88,11 @@ export default {
 
     ...mapGetters(['formPages']),
   },
+
+  data() {
+    return {
+      importFails: false,
+    }
+  }
 };
 </script>

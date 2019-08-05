@@ -11,7 +11,13 @@ export const CreateFormJsonBlob = (form, formItems) => {
   const data = JSON.stringify(denormalize(form, FormSchema, formItems), undefined, 2);
 
   return new Blob([data], { type: 'text/json' });
-};
+}
+
+export const ReadFormJsonFile = (file, onLoad) => {
+  const reader = new FileReader();
+  reader.readAsText(file);
+  reader.onload = e => onLoad(e.target.result);
+}
 
 export const SaveFile = (filename, data, format) => {
   const event = document.createEvent('MouseEvents');
@@ -23,11 +29,15 @@ export const SaveFile = (filename, data, format) => {
 
   event.initEvent('click');
   anchor.dispatchEvent(event);
-};
+}
 
 export const CreateNormalizedForm = () => {
   const { result } = normalize(new Form(uuid()), FormSchema);
   return result;
+}
+
+export const CreateNormalizedFormFromObject = (object) => {
+  return normalize(object, FormSchema);
 }
 
 export const CreateNormalizedPage = () => {
