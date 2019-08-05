@@ -33,8 +33,8 @@ export default {
     commit('addPage', CreateNormalizedPage());
   },
 
-  updatePageTitle({ commit }, payload) {
-    commit('setPageTitle', payload);
+  updatePage({ commit }, payload) {
+    commit('updatePage', payload);
   },
 
   deletePage({ commit, dispatch, state }, pageId) {

@@ -43,7 +43,7 @@ export default {
   props: ['page'],
 
   methods: {
-    ...mapActions(['updatePageTitle', 'deletePage', 'addPageSection', 'addPageQuestion']),
+    ...mapActions(['updatePage', 'deletePage', 'addPageSection', 'addPageQuestion']),
   },
 
   computed: {
@@ -55,9 +55,9 @@ export default {
       },
 
       set(value) {
-        this.updatePageTitle({
+        this.updatePage({
           pageId: this.page.uuid,
-          title: value,
+          data: { title: value }
         });
       },
     },
