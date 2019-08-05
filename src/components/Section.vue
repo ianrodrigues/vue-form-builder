@@ -17,7 +17,7 @@
         Add Sub-Section
       </button>
 
-      <button class="button indigo" @click="addSectionQuestion(item.uuid)">
+      <button class="button indigo" @click="addQuestion({ type: SECTION_TYPE, id: item.uuid })">
         Add Question
       </button>
 
@@ -42,7 +42,7 @@ export default {
   props: ['item'],
 
   methods: {
-    ...mapActions(['addSection', 'updateSection', 'deleteSection', 'addSectionQuestion']),
+    ...mapActions(['addSection', 'updateSection', 'deleteSection', 'addQuestion']),
   },
 
   computed: {

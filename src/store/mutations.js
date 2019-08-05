@@ -76,16 +76,16 @@ export default {
     Vue.set(formItems.section, section.uuid, section);
   },
 
-  addQuestion({ formItems }, { parentSchema, parentId, question }) {
+  addQuestion({ formItems }, { parent, question }) {
     const items = [
-      ...formItems[parentSchema][parentId].items,
+      ...formItems[parent.type][parent.id].items,
       {
         id: question.uuid,
         schema: QUESTION_TYPE,
       },
     ];
 
-    Vue.set(formItems[parentSchema][parentId], 'items', items);
+    Vue.set(formItems[parent.type][parent.id], 'items', items);
     Vue.set(formItems.question, question.uuid, question);
   },
 };

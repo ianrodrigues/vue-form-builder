@@ -53,13 +53,13 @@ export default {
     commit('updateSection', payload);
   },
 
-  updateQuestion({ commit }, payload) {
-    commit('updateQuestion', payload);
+  addQuestion({ commit }, parent) {
+    const question = CreateNormalizedQuestion();
+    commit('addQuestion', { parent, question });
   },
 
-  addPageQuestion({ commit }, pageId) {
-    const question = CreateNormalizedQuestion();
-    commit('addQuestion', { parentSchema: PAGE_TYPE, parentId: pageId, question });
+  updateQuestion({ commit }, payload) {
+    commit('updateQuestion', payload);
   },
 
   deleteSection({ commit, dispatch, state }, sectionId) {
@@ -71,14 +71,7 @@ export default {
     commit('deleteSection', sectionId);
   },
 
-  addSectionQuestion({ commit }, sectionId) {
-    const question = CreateNormalizedQuestion();
-    commit('addQuestion', { parentSchema: SECTION_TYPE, parentId: sectionId, question });
-  },
-
   deleteQuestion({ commit }, questionId) {
     commit('deleteQuestion', questionId);
   },
-
-  
 };

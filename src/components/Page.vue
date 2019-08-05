@@ -17,7 +17,7 @@
         Add Section
       </button>
 
-      <button class="button indigo" @click="addPageQuestion(page.uuid)">
+      <button class="button indigo" @click="addQuestion({ type: PAGE_TYPE, id: page.uuid })">
         Add Question
       </button>
 
@@ -44,7 +44,7 @@ export default {
   props: ['page'],
 
   methods: {
-    ...mapActions(['updatePage', 'deletePage', 'addSection', 'addPageQuestion']),
+    ...mapActions(['updatePage', 'deletePage', 'addSection', 'addQuestion']),
   },
 
   computed: {
