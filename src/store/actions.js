@@ -37,6 +37,14 @@ export default {
     commit('updatePage', payload);
   },
 
+  updateSection({ commit }, payload) {
+    commit('updateSection', payload);
+  },
+
+  updateQuestion({ commit }, payload) {
+    commit('updateQuestion', payload);
+  },
+
   deletePage({ commit, dispatch, state }, pageId) {
     _.forEachRight(state.formItems.page[pageId].items, (item) => {
       const action = (item.schema === SECTION_TYPE) ? 'deleteSection' : 'deleteQuestion';
@@ -61,10 +69,6 @@ export default {
     commit('addSection', { parentSchema: SECTION_TYPE, parentId: sectionId, section });
   },
 
-  updateSection({ commit }, payload) {
-    commit('updateSection', payload);
-  },
-
   deleteSection({ commit, dispatch, state }, sectionId) {
     _.forEachRight(state.formItems.section[sectionId].items, (item) => {
       const action = (item.schema === SECTION_TYPE) ? 'deleteSection' : 'deleteQuestion';
@@ -83,11 +87,5 @@ export default {
     commit('deleteQuestion', questionId);
   },
 
-  updateQuestionTitle({ commit }, payload) {
-    commit('setQuestionTitle', payload);
-  },
-
-  updateQuestionResponseType({ commit }, payload) {
-    commit('setQuestionResponseType', payload);
-  },
+  
 };

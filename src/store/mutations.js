@@ -26,8 +26,8 @@ export default {
     Vue.set(section, sectionId, { ...section[sectionId], ...data });
   },
 
-  setQuestionTitle({ formItems: { question } }, { questionId, title }) {
-    Vue.set(question[questionId], 'title', title);
+  updateQuestion({ formItems: { question } }, { questionId, data }) {
+    Vue.set(question, questionId, { ...question[questionId], ...data });
   },
 
   setQuestionResponseType({ formItems: { question } }, { questionId, response_type }) {

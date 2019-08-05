@@ -38,7 +38,7 @@ export default {
   props: ['item'],
 
   methods: {
-    ...mapActions(['deleteQuestion', 'updateQuestionTitle', 'updateQuestionResponseType']),
+    ...mapActions(['deleteQuestion', 'updateQuestion']),
   },
 
   computed: {
@@ -48,9 +48,9 @@ export default {
       },
 
       set(value) {
-        this.updateQuestionTitle({
+        this.updateQuestion({
           questionId: this.item.uuid,
-          title: value,
+          data: { title: value },
         });
       },
     },
@@ -61,9 +61,9 @@ export default {
       },
 
       set(value) {
-        this.updateQuestionResponseType({
+        this.updateQuestion({
           questionId: this.item.uuid,
-          response_type: value,
+          data: { response_type: value },
         });
       },
     },
