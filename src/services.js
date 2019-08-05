@@ -32,7 +32,7 @@ export const SaveFile = (filename, data, format) => {
 }
 
 export const CreateNormalizedForm = () => {
-  const { result } = normalize(new Form(uuid()), FormSchema);
+  const { result } = normalize(new Form(), FormSchema);
   return result;
 }
 
