@@ -51,8 +51,16 @@ describe('getters.js', () => {
             uuid: '123e4567-e89b-12d3-a456-426655440000',
           },
         },
-        section: {},
-        question: {},
+        section: {
+          '123e4567-e89b-12d3-a456-426655440002': {
+            uuid: '123e4567-e89b-12d3-a456-426655440002',
+          },
+        },
+        question: {
+          '123e4567-e89b-12d3-a456-426655440003': {
+            uuid: '123e4567-e89b-12d3-a456-426655440003',
+          },
+        },
       },
     }
     
@@ -61,7 +69,7 @@ describe('getters.js', () => {
     expect(pageItems).toEqual([]);
   });
 
-  it('should return sections or questions for a page', () => {
+  it('should return sections and questions for a page', () => {
     const state = {
       formItems: {
         page: {
@@ -100,6 +108,73 @@ describe('getters.js', () => {
     expect(pageItems).toEqual([
       {
         uuid: '123e4567-e89b-12d3-a456-426655440001',
+      },
+      {
+        uuid: '123e4567-e89b-12d3-a456-426655440002',
+      }
+    ]);
+  });
+
+  it('should return an empty array when there is no sections or questions for a page', () => {
+    const state = {
+      formItems: {
+        section: {
+          '123e4567-e89b-12d3-a456-426655440000': {
+            uuid: '123e4567-e89b-12d3-a456-426655440000',
+          },
+        },
+        question: {
+          '123e4567-e89b-12d3-a456-426655440002': {
+            uuid: '123e4567-e89b-12d3-a456-426655440002',
+          },
+          '123e4567-e89b-12d3-a456-426655440003': {
+            uuid: '123e4567-e89b-12d3-a456-426655440003',
+          },
+        },
+      },
+    }
+    
+    const sectionItems = getters.sectionItems(state)('123e4567-e89b-12d3-a456-426655440000');
+
+    expect(sectionItems).toEqual([]);
+  });
+
+  it('should return sections and questions for a section', () => {
+    const state = {
+      formItems: {
+        section: {
+          '123e4567-e89b-12d3-a456-426655440000': {
+            uuid: '123e4567-e89b-12d3-a456-426655440000',
+            items: [{
+              id: '123e4567-e89b-12d3-a456-426655440001',
+              schema: 'section'
+            },{
+              id: '123e4567-e89b-12d3-a456-426655440002',
+              schema: 'question',
+            }]
+          },
+          '123e4567-e89b-12d3-a456-426655440001': {
+            uuid: '123e4567-e89b-12d3-a456-426655440001',
+            items: []
+          },
+        },
+        question: {
+          '123e4567-e89b-12d3-a456-426655440002': {
+            uuid: '123e4567-e89b-12d3-a456-426655440002',
+          },
+          '123e4567-e89b-12d3-a456-426655440003': {
+            uuid: '123e4567-e89b-12d3-a456-426655440003',
+          },
+        },
+      },
+    }
+    
+    const sectionItems = getters.sectionItems(state)('123e4567-e89b-12d3-a456-426655440000');
+
+    expect(sectionItems).toEqual([
+      {
+        uuid: '123e4567-e89b-12d3-a456-426655440001',
+        items: [],
       },
       {
         uuid: '123e4567-e89b-12d3-a456-426655440002',
