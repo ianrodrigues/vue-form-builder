@@ -1,5 +1,13 @@
 # app
 
+## Using Docker
+```
+docker-compose run app npm install
+docker-compose up -d
+
+Go to http://localhost:8080
+```
+
 ## Project setup
 ```
 npm install
