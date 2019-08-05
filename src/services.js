@@ -1,9 +1,8 @@
 import { normalize, denormalize } from 'normalizr';
-import uuid from 'uuid/v4';
 
 import Form from '@/models/Form';
 import Page from '@/models/Page';
-import Question, { RESPONSE_TYPE_TEXT } from '@/models/Question';
+import Question from '@/models/Question';
 import Section from '@/models/Section';
 import { FormSchema, SectionSchema, QuestionSchema, PageSchema } from '@/store/schema';
 
@@ -32,7 +31,7 @@ export const SaveFile = (filename, data, format) => {
 }
 
 export const CreateNormalizedForm = () => {
-  const { result } = normalize(new Form(uuid()), FormSchema);
+  const { result } = normalize(new Form(), FormSchema);
   return result;
 }
 
@@ -41,16 +40,16 @@ export const CreateNormalizedFormFromObject = (object) => {
 }
 
 export const CreateNormalizedPage = () => {
-  const { entities: { page }, result } = normalize(new Page(uuid(), ''), PageSchema);
+  const { entities: { page }, result } = normalize(new Page(), PageSchema);
   return page[result];
 }
 
 export const CreateNormalizedSection = () => {
-  const { entities: { section }, result } = normalize(new Section(uuid(), ''), SectionSchema);
+  const { entities: { section }, result } = normalize(new Section(), SectionSchema);
   return section[result];
 } 
 
 export const CreateNormalizedQuestion = () => {
-  const { entities: { question }, result } = normalize(new Question(uuid(), '', RESPONSE_TYPE_TEXT), QuestionSchema);
+  const { entities: { question }, result } = normalize(new Question(), QuestionSchema);
   return question[result];
 }
