@@ -5,7 +5,6 @@ import {
 } from '@/services';
 import { FORM_TYPE } from '@/models/Form';
 import { SECTION_TYPE } from '@/models/Section';
-import { PAGE_TYPE } from '@/models/Page';
 
 export default {
   createNewForm({ commit }) {
