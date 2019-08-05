@@ -61,8 +61,8 @@ export default {
     commit('addSection', { parentSchema: SECTION_TYPE, parentId: sectionId, section });
   },
 
-  updateSectionTitle({ commit }, payload) {
-    commit('setSectionTitle', payload);
+  updateSection({ commit }, payload) {
+    commit('updateSection', payload);
   },
 
   deleteSection({ commit, dispatch, state }, sectionId) {

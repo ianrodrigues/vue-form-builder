@@ -42,7 +42,7 @@ export default {
   props: ['item'],
 
   methods: {
-    ...mapActions(['addSubSection', 'updateSectionTitle', 'deleteSection', 'addSectionQuestion']),
+    ...mapActions(['addSubSection', 'updateSection', 'deleteSection', 'addSectionQuestion']),
   },
 
   computed: {
@@ -54,9 +54,9 @@ export default {
       },
 
       set(value) {
-        this.updateSectionTitle({
+        this.updateSection({
           sectionId: this.item.uuid,
-          title: value,
+          data: { title: value },
         });
       },
     },

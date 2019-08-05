@@ -22,8 +22,8 @@ export default {
     Vue.set(page, pageId, { ...page[pageId], ...data });
   },
 
-  setSectionTitle({ formItems: { section } }, { sectionId, title }) {
-    Vue.set(section[sectionId], 'title', title);
+  updateSection({ formItems: { section } }, { sectionId, data }) {
+    Vue.set(section, sectionId, { ...section[sectionId], ...data });
   },
 
   setQuestionTitle({ formItems: { question } }, { questionId, title }) {
