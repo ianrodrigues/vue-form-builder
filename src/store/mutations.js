@@ -1,6 +1,9 @@
 import _ from 'lodash';
 import Vue from 'vue';
 
+import { SECTION_TYPE } from '@/models/Section';
+import { QUESTION_TYPE } from '@/models/Question';
+
 export default {
   setForm(state, form) {
     state.form = form;
@@ -38,11 +41,11 @@ export default {
 
   deleteSection({ formItems }, sectionId) {
     _.forEach(formItems.page, (page) => {
-      _.remove(page.items, { id: sectionId, schema: 'section' });
+      _.remove(page.items, { id: sectionId, schema: SECTION_TYPE });
     });
 
     _.forEach(formItems.section, (section) => {
-      _.remove(section.items, { id: sectionId, schema: 'section' });
+      _.remove(section.items, { id: sectionId, schema: SECTION_TYPE });
     });
 
     Vue.delete(formItems.section, sectionId);
@@ -50,11 +53,11 @@ export default {
 
   deleteQuestion({ formItems }, questionId) {
     _.forEach(formItems.page, (page) => {
-      _.remove(page.items, { id: questionId, schema: 'question' });
+      _.remove(page.items, { id: questionId, schema: QUESTION_TYPE });
     });
 
     _.forEach(formItems.section, (section) => {
-      _.remove(section.items, { id: questionId, schema: 'question' });
+      _.remove(section.items, { id: questionId, schema: QUESTION_TYPE });
     });
 
     Vue.delete(formItems.question, questionId);
@@ -65,7 +68,7 @@ export default {
       ...formItems[parentSchema][parentId].items,
       {
         id: section.uuid,
-        schema: 'section',
+        schema: SECTION_TYPE,
       },
     ];
 
@@ -78,7 +81,7 @@ export default {
       ...formItems[parentSchema][parentId].items,
       {
         id: question.uuid,
-        schema: 'question',
+        schema: QUESTION_TYPE,
       },
     ];
 

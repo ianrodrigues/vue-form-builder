@@ -8,7 +8,7 @@
       <component
         v-for="element in pageItems(page.uuid)"
         v-bind:key="element.uuid"
-        v-bind:is="element.type === 'section' ? 'ZypSection' : 'ZypQuestion'"
+        v-bind:is="element.type === SECTION_TYPE ? 'ZypSection' : 'ZypQuestion'"
         v-bind:item="element" />
     </div>
 
@@ -31,6 +31,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 
+import { SECTION_TYPE } from '@/models/Section';
 import ZypQuestion from '@/components/Question.vue';
 import ZypSection from '@/components/Section.vue';
 
@@ -60,6 +61,12 @@ export default {
         });
       },
     },
+  },
+
+  data() {
+    return {
+      SECTION_TYPE,
+    }
   },
 };
 </script>

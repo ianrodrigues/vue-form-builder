@@ -1,23 +1,21 @@
 import _ from 'lodash';
-import { normalize } from 'normalizr';
 
 import {
-  FormSchema, PageSchema, SectionSchema, QuestionSchema,
-} from '@/store/schema';
-import {
-  CreateNewForm, CreateNewPage, CreateNewSection, CreateNewQuestion,
+  CreateNormalizedForm, CreateNormalizedPage, CreateNormalizedSection, CreateNormalizedQuestion,
 } from '@/services';
+import { FORM_TYPE } from '@/models/Form';
+import { SECTION_TYPE } from '@/models/Section';
+import { PAGE_TYPE } from '@/models/Page';
 
 export default {
   createNewForm({ commit }) {
-    const { result } = normalize(CreateNewForm(), FormSchema);
-    commit('setForm', result);
+    commit('setForm', CreateNormalizedForm())
   },
 
   deleteForm({ commit }) {
     const form = {
       uuid: null,
-      type: 'form',
+      type: FORM_TYPE,
       items: [],
     };
 
@@ -32,8 +30,7 @@ export default {
   },
 
   addPage({ commit }) {
-    const { entities: { page }, result } = normalize(CreateNewPage(), PageSchema);
-    commit('addPage', page[result]);
+    commit('addPage', CreateNormalizedPage());
   },
 
   updatePageTitle({ commit }, payload) {
@@ -42,7 +39,7 @@ export default {
 
   deletePage({ commit, dispatch, state }, pageId) {
     _.forEachRight(state.formItems.page[pageId].items, (item) => {
-      const action = (item.schema === 'section') ? 'deleteSection' : 'deleteQuestion';
+      const action = (item.schema === SECTION_TYPE) ? 'deleteSection' : 'deleteQuestion';
       dispatch(action, item.id);
     });
 
@@ -50,21 +47,18 @@ export default {
   },
 
   addPageSection({ commit }, pageId) {
-    const { entities: { section }, result } = normalize(CreateNewSection(), SectionSchema);
-
-    commit('addSection', { parentSchema: 'page', parentId: pageId, section: section[result] });
+    const section = CreateNormalizedSection();
+    commit('addSection', { parentSchema: PAGE_TYPE, parentId: pageId, section });
   },
 
   addPageQuestion({ commit }, pageId) {
-    const { entities: { question }, result } = normalize(CreateNewQuestion(), QuestionSchema);
-
-    commit('addQuestion', { parentSchema: 'page', parentId: pageId, question: question[result] });
+    const question = CreateNormalizedQuestion();
+    commit('addQuestion', { parentSchema: PAGE_TYPE, parentId: pageId, question });
   },
 
   addSubSection({ commit }, sectionId) {
-    const { entities: { section }, result } = normalize(CreateNewSection(), SectionSchema);
-
-    commit('addSection', { parentSchema: 'section', parentId: sectionId, section: section[result] });
+    const section = CreateNormalizedSection();
+    commit('addSection', { parentSchema: SECTION_TYPE, parentId: sectionId, section });
   },
 
   updateSectionTitle({ commit }, payload) {
@@ -73,7 +67,7 @@ export default {
 
   deleteSection({ commit, dispatch, state }, sectionId) {
     _.forEachRight(state.formItems.section[sectionId].items, (item) => {
-      const action = (item.schema === 'section') ? 'deleteSection' : 'deleteQuestion';
+      const action = (item.schema === SECTION_TYPE) ? 'deleteSection' : 'deleteQuestion';
       dispatch(action, item.id);
     });
 
@@ -81,9 +75,8 @@ export default {
   },
 
   addSectionQuestion({ commit }, sectionId) {
-    const { entities: { question }, result } = normalize(CreateNewQuestion(), QuestionSchema);
-
-    commit('addQuestion', { parentSchema: 'section', parentId: sectionId, question: question[result] });
+    const question = CreateNormalizedQuestion();
+    commit('addQuestion', { parentSchema: SECTION_TYPE, parentId: sectionId, question });
   },
 
   deleteQuestion({ commit }, questionId) {

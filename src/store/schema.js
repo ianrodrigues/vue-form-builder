@@ -1,10 +1,14 @@
 import { schema } from 'normalizr';
 
-export const PageSchema = new schema.Entity('page', {}, { idAttribute: 'uuid' });
+import { SECTION_TYPE } from '../models/Section';
+import { PAGE_TYPE } from '../models/Page';
+import { QUESTION_TYPE } from '../models/Question';
 
-export const SectionSchema = new schema.Entity('section', {}, { idAttribute: 'uuid' });
+export const PageSchema = new schema.Entity(PAGE_TYPE, {}, { idAttribute: 'uuid' });
 
-export const QuestionSchema = new schema.Entity('question', {}, { idAttribute: 'uuid' });
+export const SectionSchema = new schema.Entity(SECTION_TYPE, {}, { idAttribute: 'uuid' });
+
+export const QuestionSchema = new schema.Entity(QUESTION_TYPE, {}, { idAttribute: 'uuid' });
 
 export const FormItemsSchema = new schema.Union({
   section: SectionSchema,

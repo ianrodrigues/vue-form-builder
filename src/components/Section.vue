@@ -7,7 +7,7 @@
     <div class="form-element-body">
       <component
         v-for="child in sectionItems(item.uuid)"
-        v-bind:is="child.type === 'section' ? 'ZypSection' : 'ZypQuestion'"
+        v-bind:is="child.type === SECTION_TYPE ? 'ZypSection' : 'ZypQuestion'"
         v-bind:key="child.uuid"
         v-bind:item="child" />
     </div>
@@ -31,6 +31,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 
+import { SECTION_TYPE } from '@/models/Section';
 import ZypQuestion from '@/components/Question.vue';
 
 export default {
@@ -59,6 +60,12 @@ export default {
         });
       },
     },
+  },
+
+  data() {
+    return {
+      SECTION_TYPE,
+    }
   },
 };
 </script>

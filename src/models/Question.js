@@ -1,4 +1,5 @@
 
+export const QUESTION_TYPE = 'question';
 export const RESPONSE_TYPE_TEXT = 'text';
 export const RESPONSE_TYPE_NUMBER = 'number';
 
@@ -9,7 +10,7 @@ export default class Question {
     }
 
     this.uuid = uuid;
-    this.type = 'question';
+    this.type = QUESTION_TYPE;
     this.title = title;
     this.response_type = response_type;
   }

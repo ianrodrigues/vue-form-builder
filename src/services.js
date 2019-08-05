@@ -1,11 +1,11 @@
-import { denormalize } from 'normalizr';
+import { normalize, denormalize } from 'normalizr';
 import uuid from 'uuid/v4';
 
 import Form from '@/models/Form';
 import Page from '@/models/Page';
 import Question, { RESPONSE_TYPE_TEXT } from '@/models/Question';
 import Section from '@/models/Section';
-import { FormSchema } from '@/store/schema';
+import { FormSchema, SectionSchema, QuestionSchema, PageSchema } from '@/store/schema';
 
 export const CreateFormJsonBlob = (form, formItems) => {
   const data = JSON.stringify(denormalize(form, FormSchema, formItems), undefined, 2);
@@ -25,7 +25,22 @@ export const SaveFile = (filename, data, format) => {
   anchor.dispatchEvent(event);
 };
 
-export const CreateNewForm = () => new Form(uuid());
-export const CreateNewPage = () => new Page(uuid(), '');
-export const CreateNewSection = () => new Section(uuid(), '');
-export const CreateNewQuestion = () => new Question(uuid(), '', RESPONSE_TYPE_TEXT);
+export const CreateNormalizedForm = () => {
+  const { result } = normalize(new Form(uuid()), FormSchema);
+  return result;
+}
+
+export const CreateNormalizedPage = () => {
+  const { entities: { page }, result } = normalize(new Page(uuid(), ''), PageSchema);
+  return page[result];
+}
+
+export const CreateNormalizedSection = () => {
+  const { entities: { section }, result } = normalize(new Section(uuid(), ''), SectionSchema);
+  return section[result];
+} 
+
+export const CreateNormalizedQuestion = () => {
+  const { entities: { question }, result } = normalize(new Question(uuid(), '', RESPONSE_TYPE_TEXT), QuestionSchema);
+  return question[result];
+}
