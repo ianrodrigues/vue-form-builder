@@ -1,11 +1,7 @@
 
 export default {
   formPages({ formItems: { page } }) {
-    try {
-      return Object.values(page);
-    } catch (error) {
-      return [];
-    }
+    return Object.values(page);
   },
 
   // eslint-disable-next-line
