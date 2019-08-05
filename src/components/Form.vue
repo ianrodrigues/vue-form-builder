@@ -24,7 +24,7 @@
             Add Page
           </button>
 
-          <button class="button purple">
+          <button class="button purple" @click="exportForm">
             Export Form
           </button>
 
@@ -45,17 +45,27 @@
 import { mapActions, mapGetters, mapState } from 'vuex';
 
 import ZypPage from '@/components/Page.vue';
+import { CreateFormJsonBlob, SaveFile } from '@/services';
 
 export default {
   name: 'ZypForm',
 
   components: { ZypPage },
 
-  methods: mapActions(['createNewForm', 'deleteForm', 'addPage']),
+  methods: {
+    ...mapActions(['createNewForm', 'deleteForm', 'addPage']),
+
+    exportForm() {
+      const blob = CreateFormJsonBlob(this.form, this.formItems);
+
+      SaveFile(`zypone-${this.form.uuid}.json`, blob, 'text/json');
+    },
+  },
 
   computed: {
     ...mapState({
       form: ({ form }) => form,
+      formItems: ({ formItems }) => formItems,
     }),
 
     ...mapGetters(['formPages']),

@@ -52,21 +52,21 @@ export default {
           questionId: this.item.uuid,
           title: value,
         });
-      }
+      },
     },
 
     questionResponseType: {
       get() {
-        return this.item.responseType;
+        return this.item.response_type;
       },
 
       set(value) {
         this.updateQuestionResponseType({
           questionId: this.item.uuid,
-          responseType: value,
+          response_type: value,
         });
-      }
-    }
+      },
+    },
   },
 };
 </script>

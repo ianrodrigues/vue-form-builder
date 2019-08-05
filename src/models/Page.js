@@ -1,12 +1,9 @@
-import uuid from 'uuid/v4';
 
 export default class Page {
-  constructor(id, title) {
+  constructor(uuid, title) {
+    this.uuid = uuid;
     this.type = 'page';
-    this.uuid = id;
     this.title = title;
     this.items = [];
   }
 }
-
-export const CreateNewPage = () => new Page(uuid(), '');

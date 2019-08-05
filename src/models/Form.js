@@ -1,11 +1,8 @@
-import uuid from 'uuid/v4';
 
 export default class Form {
-  constructor(id) {
+  constructor(uuid) {
+    this.uuid = uuid;
     this.type = 'form';
-    this.uuid = id;
     this.items = [];
   }
 }
-
-export const CreateNewForm = () => new Form(uuid());
