@@ -63,16 +63,16 @@ export default {
     Vue.delete(formItems.question, questionId);
   },
 
-  addSection({ formItems }, { parentSchema, parentId, section }) {
+  addSection({ formItems }, { parent, section }) {
     const items = [
-      ...formItems[parentSchema][parentId].items,
+      ...formItems[parent.type][parent.id].items,
       {
         id: section.uuid,
         schema: SECTION_TYPE,
       },
     ];
 
-    Vue.set(formItems[parentSchema][parentId], 'items', items);
+    Vue.set(formItems[parent.type][parent.id], 'items', items);
     Vue.set(formItems.section, section.uuid, section);
   },
 

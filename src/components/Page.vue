@@ -13,7 +13,7 @@
     </div>
 
     <div class="form-element-actions">
-      <button class="button green" @click="addPageSection(page.uuid)">
+      <button class="button green" @click="addSection({ type: PAGE_TYPE, id: page.uuid })">
         Add Section
       </button>
 
@@ -31,6 +31,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 
+import { PAGE_TYPE } from '@/models/Page';
 import { SECTION_TYPE } from '@/models/Section';
 import ZypQuestion from '@/components/Question.vue';
 import ZypSection from '@/components/Section.vue';
@@ -43,7 +44,7 @@ export default {
   props: ['page'],
 
   methods: {
-    ...mapActions(['updatePage', 'deletePage', 'addPageSection', 'addPageQuestion']),
+    ...mapActions(['updatePage', 'deletePage', 'addSection', 'addPageQuestion']),
   },
 
   computed: {
@@ -65,6 +66,7 @@ export default {
 
   data() {
     return {
+      PAGE_TYPE,
       SECTION_TYPE,
     }
   },

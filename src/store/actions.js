@@ -37,6 +37,18 @@ export default {
     commit('updatePage', payload);
   },
 
+  deletePage({ commit, dispatch, state }, pageId) {
+    _.forEachRight(state.formItems.page[pageId].items, (item) => {
+      dispatch((item.schema === SECTION_TYPE) ? 'deleteSection' : 'deleteQuestion', item.id);
+    });
+    commit('deletePage', pageId);
+  },
+
+  addSection({ commit }, parent) {
+    const section = CreateNormalizedSection();
+    commit('addSection', { parent, section });
+  },
+
   updateSection({ commit }, payload) {
     commit('updateSection', payload);
   },
@@ -45,28 +57,9 @@ export default {
     commit('updateQuestion', payload);
   },
 
-  deletePage({ commit, dispatch, state }, pageId) {
-    _.forEachRight(state.formItems.page[pageId].items, (item) => {
-      const action = (item.schema === SECTION_TYPE) ? 'deleteSection' : 'deleteQuestion';
-      dispatch(action, item.id);
-    });
-
-    commit('deletePage', pageId);
-  },
-
-  addPageSection({ commit }, pageId) {
-    const section = CreateNormalizedSection();
-    commit('addSection', { parentSchema: PAGE_TYPE, parentId: pageId, section });
-  },
-
   addPageQuestion({ commit }, pageId) {
     const question = CreateNormalizedQuestion();
     commit('addQuestion', { parentSchema: PAGE_TYPE, parentId: pageId, question });
-  },
-
-  addSubSection({ commit }, sectionId) {
-    const section = CreateNormalizedSection();
-    commit('addSection', { parentSchema: SECTION_TYPE, parentId: sectionId, section });
   },
 
   deleteSection({ commit, dispatch, state }, sectionId) {

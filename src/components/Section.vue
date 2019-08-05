@@ -13,7 +13,7 @@
     </div>
 
     <div class="form-element-actions">
-      <button class="button green" @click="addSubSection(item.uuid)">
+      <button class="button green" @click="addSection({ type: SECTION_TYPE, id: item.uuid })">
         Add Sub-Section
       </button>
 
@@ -42,7 +42,7 @@ export default {
   props: ['item'],
 
   methods: {
-    ...mapActions(['addSubSection', 'updateSection', 'deleteSection', 'addSectionQuestion']),
+    ...mapActions(['addSection', 'updateSection', 'deleteSection', 'addSectionQuestion']),
   },
 
   computed: {
