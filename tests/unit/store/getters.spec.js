@@ -42,4 +42,68 @@ describe('getters.js', () => {
       }
     ]);
   });
+
+  it('should return an empty array when there is no sections or questions for a page', () => {
+    const state = {
+      formItems: {
+        page: {
+          '123e4567-e89b-12d3-a456-426655440000': {
+            uuid: '123e4567-e89b-12d3-a456-426655440000',
+          },
+        },
+        section: {},
+        question: {},
+      },
+    }
+    
+    const pageItems = getters.pageItems(state)('123e4567-e89b-12d3-a456-426655440000');
+
+    expect(pageItems).toEqual([]);
+  });
+
+  it('should return sections or questions for a page', () => {
+    const state = {
+      formItems: {
+        page: {
+          '123e4567-e89b-12d3-a456-426655440000': {
+            uuid: '123e4567-e89b-12d3-a456-426655440000',
+            items: [{
+              id: '123e4567-e89b-12d3-a456-426655440001',
+              schema: 'section'
+            },{
+              id: '123e4567-e89b-12d3-a456-426655440002',
+              schema: 'question',
+            }]
+          },
+        },
+        section: {
+          '123e4567-e89b-12d3-a456-426655440001': {
+            uuid: '123e4567-e89b-12d3-a456-426655440001',
+          },
+          '123e4567-e89b-12d3-a456-426655440003': {
+            uuid: '123e4567-e89b-12d3-a456-426655440001',
+          },
+        },
+        question: {
+          '123e4567-e89b-12d3-a456-426655440002': {
+            uuid: '123e4567-e89b-12d3-a456-426655440002',
+          },
+          '123e4567-e89b-12d3-a456-426655440004': {
+            uuid: '123e4567-e89b-12d3-a456-426655440004',
+          },
+        },
+      },
+    }
+    
+    const pageItems = getters.pageItems(state)('123e4567-e89b-12d3-a456-426655440000');
+
+    expect(pageItems).toEqual([
+      {
+        uuid: '123e4567-e89b-12d3-a456-426655440001',
+      },
+      {
+        uuid: '123e4567-e89b-12d3-a456-426655440002',
+      }
+    ]);
+  });
 });
