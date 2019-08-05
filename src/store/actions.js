@@ -3,8 +3,9 @@ import _ from 'lodash';
 import {
   CreateNormalizedForm, CreateNormalizedPage, CreateNormalizedSection, CreateNormalizedQuestion,
 } from '@/services';
+import { FORM_TYPE } from '@/models/Form';
 import { SECTION_TYPE } from '@/models/Section';
-import state from '@/store/state';
+import { PAGE_TYPE } from '@/models/Page';
 
 export default {
   createNewForm({ commit }) {
@@ -12,8 +13,20 @@ export default {
   },
 
   deleteForm({ commit }) {
-    commit('setForm', state.form);
-    commit('setFormItems', state.formItems);
+    const form = {
+      uuid: null,
+      type: FORM_TYPE,
+      items: [],
+    };
+
+    const formItems = {
+      page: {},
+      section: {},
+      question: {},
+    };
+
+    commit('setForm', form);
+    commit('setFormItems', formItems);
   },
 
   addPage({ commit }) {
