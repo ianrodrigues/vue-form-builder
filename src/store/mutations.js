@@ -22,45 +22,9 @@ export default {
     Vue.set(page, pageId, { ...page[pageId], ...data });
   },
 
-  updateSection({ formItems: { section } }, { sectionId, data }) {
-    Vue.set(section, sectionId, { ...section[sectionId], ...data });
-  },
-
-  updateQuestion({ formItems: { question } }, { questionId, data }) {
-    Vue.set(question, questionId, { ...question[questionId], ...data });
-  },
-
-  setQuestionResponseType({ formItems: { question } }, { questionId, response_type }) {
-    Vue.set(question[questionId], 'response_type', response_type);
-  },
-
   deletePage({ form, formItems }, pageId) {
     form.items.splice(pageId, 1);
     Vue.delete(formItems.page, pageId);
-  },
-
-  deleteSection({ formItems }, sectionId) {
-    _.forEach(formItems.page, (page) => {
-      _.remove(page.items, { id: sectionId, schema: SECTION_TYPE });
-    });
-
-    _.forEach(formItems.section, (section) => {
-      _.remove(section.items, { id: sectionId, schema: SECTION_TYPE });
-    });
-
-    Vue.delete(formItems.section, sectionId);
-  },
-
-  deleteQuestion({ formItems }, questionId) {
-    _.forEach(formItems.page, (page) => {
-      _.remove(page.items, { id: questionId, schema: QUESTION_TYPE });
-    });
-
-    _.forEach(formItems.section, (section) => {
-      _.remove(section.items, { id: questionId, schema: QUESTION_TYPE });
-    });
-
-    Vue.delete(formItems.question, questionId);
   },
 
   addSection({ formItems }, { parent, section }) {
@@ -76,6 +40,22 @@ export default {
     Vue.set(formItems.section, section.uuid, section);
   },
 
+  updateSection({ formItems: { section } }, { sectionId, data }) {
+    Vue.set(section, sectionId, { ...section[sectionId], ...data });
+  },
+
+  deleteSection({ formItems }, sectionId) {
+    _.forEach(formItems.page, (page) => {
+      _.remove(page.items, { id: sectionId, schema: SECTION_TYPE });
+    });
+
+    _.forEach(formItems.section, (section) => {
+      _.remove(section.items, { id: sectionId, schema: SECTION_TYPE });
+    });
+
+    Vue.delete(formItems.section, sectionId);
+  },
+
   addQuestion({ formItems }, { parent, question }) {
     const items = [
       ...formItems[parent.type][parent.id].items,
@@ -87,5 +67,21 @@ export default {
 
     Vue.set(formItems[parent.type][parent.id], 'items', items);
     Vue.set(formItems.question, question.uuid, question);
+  },
+
+  updateQuestion({ formItems: { question } }, { questionId, data }) {
+    Vue.set(question, questionId, { ...question[questionId], ...data });
+  },
+
+  deleteQuestion({ formItems }, questionId) {
+    _.forEach(formItems.page, (page) => {
+      _.remove(page.items, { id: questionId, schema: QUESTION_TYPE });
+    });
+
+    _.forEach(formItems.section, (section) => {
+      _.remove(section.items, { id: questionId, schema: QUESTION_TYPE });
+    });
+
+    Vue.delete(formItems.question, questionId);
   },
 };

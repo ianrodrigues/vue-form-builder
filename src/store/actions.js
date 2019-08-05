@@ -53,6 +53,13 @@ export default {
     commit('updateSection', payload);
   },
 
+  deleteSection({ commit, dispatch, state }, sectionId) {
+    _.forEachRight(state.formItems.section[sectionId].items, (item) => {
+      dispatch((item.schema === SECTION_TYPE) ? 'deleteSection' : 'deleteQuestion', item.id);
+    });
+    commit('deleteSection', sectionId);
+  },
+
   addQuestion({ commit }, parent) {
     const question = CreateNormalizedQuestion();
     commit('addQuestion', { parent, question });
@@ -60,15 +67,6 @@ export default {
 
   updateQuestion({ commit }, payload) {
     commit('updateQuestion', payload);
-  },
-
-  deleteSection({ commit, dispatch, state }, sectionId) {
-    _.forEachRight(state.formItems.section[sectionId].items, (item) => {
-      const action = (item.schema === SECTION_TYPE) ? 'deleteSection' : 'deleteQuestion';
-      dispatch(action, item.id);
-    });
-
-    commit('deleteSection', sectionId);
   },
 
   deleteQuestion({ commit }, questionId) {
