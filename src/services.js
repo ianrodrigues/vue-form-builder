@@ -41,12 +41,12 @@ export const CreateNormalizedFormFromObject = (object) => {
 }
 
 export const CreateNormalizedPage = () => {
-  const { entities: { page }, result } = normalize(new Page(uuid(), ''), PageSchema);
+  const { entities: { page }, result } = normalize(new Page(), PageSchema);
   return page[result];
 }
 
 export const CreateNormalizedSection = () => {
-  const { entities: { section }, result } = normalize(new Section(uuid(), ''), SectionSchema);
+  const { entities: { section }, result } = normalize(new Section(), SectionSchema);
   return section[result];
 } 
 
