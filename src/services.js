@@ -1,9 +1,8 @@
 import { normalize, denormalize } from 'normalizr';
-import uuid from 'uuid/v4';
 
 import Form from '@/models/Form';
 import Page from '@/models/Page';
-import Question, { RESPONSE_TYPE_TEXT } from '@/models/Question';
+import Question from '@/models/Question';
 import Section from '@/models/Section';
 import { FormSchema, SectionSchema, QuestionSchema, PageSchema } from '@/store/schema';
 
@@ -51,6 +50,6 @@ export const CreateNormalizedSection = () => {
 } 
 
 export const CreateNormalizedQuestion = () => {
-  const { entities: { question }, result } = normalize(new Question(uuid(), '', RESPONSE_TYPE_TEXT), QuestionSchema);
+  const { entities: { question }, result } = normalize(new Question(), QuestionSchema);
   return question[result];
 }
